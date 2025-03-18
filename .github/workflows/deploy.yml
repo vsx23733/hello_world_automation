@@ -11,23 +11,23 @@ jobs:
       DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Set up Python 2.7
-        uses: actions/setup-python@v2
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '2.7'
+          python-version: '3.11'
 
       - name: Install dependencies and build binary
         run: |
-          python -m virtualenv helloworld
-          source helloworld/bin/activate
+          python -m venv venv
+          source venv/bin/activate
           pip install --no-cache-dir -r requirements.txt
           pip install pyinstaller
 
       - name: Build Docker image
         run: |
-          source helloworld/bin/activate
+          source venv/bin/activate
           pyinstaller -F hello_world.py
           IMAGE_NAME="cicd-101-workshop"
           TAG="0.1.${{ github.run_number }}"
