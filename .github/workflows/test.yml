@@ -12,20 +12,21 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Set up Python 2.7
-        uses: actions/setup-python@v2
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '2.7'
+          python-version: '3.11'
+          cache: pip
 
       - name: Install dependencies
         run: |
-          python -m virtualenv helloworld
-          source helloworld/bin/activate
+          python -m venv venv
+          source venv/bin/activate
           pip install --no-cache-dir -r requirements.txt
 
       - name: Run tests
         run: |
-          source helloworld/bin/activate
+          source venv/bin/activate
           python test_hello_world.py
