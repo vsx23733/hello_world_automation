@@ -1,0 +1,42 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python 2.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+
+      - name: Install dependencies and build binary
+        run: |
+          python -m virtualenv helloworld
+          source helloworld/bin/activate
+          pip install --no-cache-dir -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build Docker image
+        run: |
+          source helloworld/bin/activate
+          pyinstaller -F hello_world.py
+          IMAGE_NAME="cicd-101-workshop"
+          TAG="0.1.${{ github.run_number }}"
+          docker build -t ${{ secrets.DOCKER_LOGIN }}/${IMAGE_NAME}:${TAG} .
+
+      - name: Log in to Docker Hub
+        run: echo ${{ secrets.DOCKER_PWD }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+
+      - name: Push Docker image
+        run: |
+          IMAGE_NAME="cicd-101-workshop"
+          TAG="0.1.${{ github.run_number }}"
+          docker push ${{ secrets.DOCKER_LOGIN }}/${IMAGE_NAME}:${TAG}
