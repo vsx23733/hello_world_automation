@@ -7,7 +7,7 @@ def generate_html(message):
         <html>
         <body>
             <div style='text-align:center;font-size:80px;'>
-                <image height="340" width="1200" src="https://user-images.githubusercontent.com/194400/41597205-a57442ea-73c4-11e8-9591-61f5c83c7e66.png">
+                <image height="540" width="1200" src="https://i0.wp.com/build5nines.com/wp-content/uploads/2023/02/GitHub_Actions_Featured_Image.jpg">
                 <br>
                 {0}<br>
             </div>
@@ -16,14 +16,13 @@ def generate_html(message):
     return html
 
 def greet():
-    greeting = 'Welcome to CI/CD 101 using CircleCI!'
+    greeting = 'Welcome to CI/CD 101 using GitHub Actions!'
     return greeting
 
-@app.route('/')
-
+@app.route('/greeting')
 def hello_world():
     html = generate_html(greet())
     return html
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=4049)
